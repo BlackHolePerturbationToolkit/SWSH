@@ -18,6 +18,8 @@ int main(int argc, char *argv[]){
 	int lmin, nmin, nmax;
 	int i, j;
 	int Ninv;
+
+  double a_omega;
 	
 	l = 2;
 	m = 0;
