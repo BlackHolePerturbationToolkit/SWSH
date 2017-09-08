@@ -26,10 +26,10 @@ int main(int argc, char *argv[]){
 	s = -2;
 	a_omega = 5.5;
 	
-	Ninv = l - fabs(m);
+	Ninv = l - abs(m);
 	
-	if(fabs(s) >= fabs(m)) lmin = fabs(s);
-	else lmin = fabs(m);
+	if(abs(s) >= abs(m)) lmin = abs(s);
+	else lmin = abs(m);
 	nmax = ceil(fabs(1.5 * a_omega - (a_omega*a_omega)/250.)) + 5;
 	if(nmax <= l-lmin) nmin = nmax;
 	else nmin = l - lmin;

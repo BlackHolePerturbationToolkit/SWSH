@@ -18,8 +18,8 @@ double alpha_n(int n, int m, int s, double a_omega){
 	double alpha;
 	double kplus, kminus;
 	
-	kplus = (double)fabs(m + s);
-	kminus = (double)fabs(m - s);
+	kplus = (double)abs(m + s);
+	kminus = (double)abs(m - s);
 	
 	if(n < 0) return 0.; 
 	
@@ -34,8 +34,8 @@ double beta_n(double A, int n, int m, int s, double a_omega){
 	double beta;
 	double kplus, kminus;
 	
-	kplus = (double)fabs(m + s);
-	kminus = (double)fabs(m - s);
+	kplus = (double)abs(m + s);
+	kminus = (double)abs(m - s);
 	
 	beta = A + (double)s*((double)s + 1.) + a_omega*a_omega - ((double)n + (kplus+kminus)/2.)*((double)n + (kplus + kminus)/2. + 1.);
 	if(s != 0) beta += (8.*(double)m*(double)s*(double)s*a_omega)/((2.*(double)n + kplus + kminus)*(2.*(double)n + kplus + kminus + 2.));
@@ -47,8 +47,8 @@ double gamma_n(int n, int m, int s, double a_omega){
 	double gamma;
 	double kplus, kminus;
 	
-	kplus = (double)fabs(m + s);
-	kminus = (double)fabs(m - s);
+	kplus = (double)abs(m + s);
+	kminus = (double)abs(m - s);
 	
 	gamma = 4.*a_omega*(double)n*((double)n + kplus + kminus)*((double)n + (kplus+kminus)/2. - (double)s);
 	gamma /= (2.*(double)n + kplus + kminus -1.)*(2.*(double)n + kplus + kminus);
@@ -484,8 +484,8 @@ double SWSH_Eigenvalue_Eigenvector_Spectral_custom(int l, int m, int s, double a
 	int i, j, k;
 	double temp;
 	
-	if(fabs(s) >= fabs(m)) lmin = fabs(s);
-	else lmin = fabs(m);
+	if(abs(s) >= abs(m)) lmin = abs(s);
+	else lmin = abs(m);
 	nmax = ceil(fabs(1.5 * a_omega - (a_omega*a_omega)/250.)) + 5;
 	if(nmax <= l-lmin) nmin = nmax;
 	else nmin = l - lmin;
@@ -557,8 +557,8 @@ double SWSH_Eigenvalue_Eigenvector_Spectral_gsl(int l, int m, int s, double a_om
 	double eig;
 	int i, j;
 	
-	if(fabs(s) >= fabs(m)) lmin = fabs(s);
-	else lmin = fabs(m);
+	if(abs(s) >= abs(m)) lmin = abs(s);
+	else lmin = abs(m);
 	nmax = ceil(fabs(1.5 * a_omega - (a_omega*a_omega)/250.)) + 5;
 	if(nmax <= l-lmin) nmin = nmax;
 	else nmin = l - lmin;
