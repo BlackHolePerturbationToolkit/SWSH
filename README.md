@@ -45,5 +45,5 @@ be found in the LICENSE file.
 
 
 # Authors
-Conor O' Toole
-Barry Wardell
+Conor O' Toole  
+Barry Wardell  
