@@ -1,6 +1,7 @@
 # SWSH
 
 Version 0.1
+
 Copyright (c) 2017 Black Hole Perturbation Toolkit Team
 
 The SWSH package provides a set of functions for computing spin-weighted
