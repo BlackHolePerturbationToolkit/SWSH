@@ -18,48 +18,56 @@ int main(int argc, char *argv[]){
 	int lmin, nmin, nmax;
 	int i, j;
 	int Ninv;
-
-  double a_omega;
+	double a_omega;
+	double theta, phi;
+	FILE *Spherical_test;
+	const char* spherical_file = "Spherical_Harmonic.txt";
 	
-	l = 2;
-	m = 0;
-	s = -2;
+	Spherical_test = fopen(spherical_file, "w");
+	
+	l = 20;
+	m = 4;
+	s = 0;
 	a_omega = 5.5;
 	
-	Ninv = l - abs(m);
+	double Re_Y, Im_Y, c_phi, s_phi;
+	double Re_Y_2;
 	
-	if(abs(s) >= abs(m)) lmin = abs(s);
-	else lmin = abs(m);
-	nmax = ceil(fabs(1.5 * a_omega - (a_omega*a_omega)/250.)) + 5;
-	if(nmax <= l-lmin) nmin = nmax;
-	else nmin = l - lmin;
+	//double Y2, diff, p;
 	
-	int dim = nmin + nmax + 2;
+	//diff = d(l, m, cos(0.5));
+	//Y2 = s2_Ylm(l, m, s, 0.5);
 	
-	double E_1, E_2, E_3, E_4;
-	double E_vec[dim], E_vec_2[dim];
+	//printf("%lf, %lf \n", diff, Y2);
 	
-	E_1 = SWSH_Eigenvalue_Eigenvector_Spectral_gsl(l, m, s, a_omega, E_vec);	//Most accurate method currently
+	theta = 0.;
+	do{
+		phi = 0.;
+		c_phi = cos(phi);
+		s_phi = sin(phi);
+		
+		if(c_phi > 1.) c_phi = 1.;
+		if(c_phi < -1.) c_phi = -1.;
+		if(s_phi > 1.) s_phi = 1.;
+		if(s_phi < -1.) s_phi = -1.;
+		
+		do{
+			//Re_Y = c_phi * SWSpherical_Harmonic(l, m, s, theta);
+			//Im_Y = s_phi * SWSpherical_Harmonic(l, m, s, theta);
+			Re_Y_2 = c_phi * gsl_sf_legendre_sphPlm(l, m, cos(theta));
+			
+			//printf("%lf, %lf, %.20lf \n", Re_Y, Re_Y_2, fabs(Re_Y - Re_Y_2));
+			
+			//fprintf(Spherical_test, "%.15lf %.15lf %.15lf %.15lf \n", theta, phi, Re_Y, Im_Y);
+			
+			phi += M_PI/100.;
+		} while(phi < M_PI);
+		
+		theta += (2.*M_PI)/100.;
+	} while(theta < 2.*M_PI);
 	
-	
-	//E_2 = SWSH_Eigenvalue_Leaver(200, Ninv, m, s, a_omega, E_3 - 1./pow(a_omega, 10.), E_3 + 1./pow(a_omega, 10.), Secant_method);// - 2.*m*a_omega + a_omega*a_omega;
-	//E_3 = SWSH_Eigenvalue_Leaver(200, Ninv, m, s, a_omega, E_3 - 1./pow(a_omega, 10.), E_3 + 1./pow(a_omega, 10.), Newton_Raphson);
-	
-	//printf("Leaver: %.20lf \n", E_2);
-	//printf("Leaver: %.20lf \n", E_3);
-	
-	E_4 = SWSH_Eigenvalue_Eigenvector_Spectral_custom(l, m, s, a_omega, E_vec_2);
-	
-	
-	//Printing to allow for checking calculated values
-	printf("Spectral (gsl): %.20lf \n\n", E_1);
-	printf("Spectral (custom): %.20lf \n", E_4);
-	printf("Eigenvalue Difference: %.20lf \n \n", fabs(E_1-E_4));
-	printf("GSL                        Custom                        Difference \n");
-	for (i = 0; i < dim; i++){
-		printf("%.20lf %.20lf %.20lf \n", E_vec[i], E_vec_2[i], fabs(fabs(E_vec[i]) - fabs(E_vec_2[i])));
-	}
-	printf("\n");
+	fclose(Spherical_test);
+	free(Spherical_test);
 	
 	clock_t end = clock();
 	double duration = (double)(end - begin)/CLOCKS_PER_SEC;
