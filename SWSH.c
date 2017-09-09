@@ -596,3 +596,181 @@ double SWSH_Eigenvalue_Eigenvector_Spectral_gsl(int l, int m, int s, double a_om
 	return -1.*eig - (double)(s*(s+1));
 	
 }
+
+/**************************************/
+/* Spin-Weighted Spherical Harmonics  */
+/**************************************/
+
+double A(int l, int m){
+	
+	double mid1, mid2;
+	int i;
+	
+	mid1 = 1.;
+	mid2 = 1.;
+	
+	for(i = l-m; i > 0; i--){
+		mid1 *= (double)i;
+	}
+	
+	for(i = l+m; i > 0; i--){
+		mid2 *= (double)i;
+	}
+	
+	return sqrt(((2.* l + 1) * mid1)/( 4. * M_PI * mid2));
+}
+
+double P(int l, int m, double x){
+	
+	int i, j, k;
+	double mid;
+	double Legendre[l][l];		//dynamic memory allocation on each of the first indices would be far more efficient, but simplicity is desired for now
+	
+	for(i = 0; i <= l; i++){
+		for(j = 0; j <= GSL_MIN_INT(i, m); j++){
+			
+			mid = 1.;
+			
+			for(k = 2*j-1; k > 0; k -= 2){
+				mid *= (double)k;
+			}
+			
+			if(i == j) Legendre[i][j] = pow(-1., (double)j) * mid * pow(1.- x*x, (double)j/2.);
+			else if(i == j+1 ) Legendre[i][j] = x*(2*(double)j + 1.)*Legendre[i-1][j];
+			else Legendre[i][j] = (1./(double)(i-j))*( x*(2.*(double)i -1.)*Legendre[i-1][j] - (double)(i+j-1) * Legendre[i-2][j] ); 
+		}
+	}
+	
+	return Legendre[l][m];
+}
+
+double d(int l, int m, double x){
+	
+	int i, j, k;
+	double mid;
+	double d_Legendre[l][l];
+	
+	for(i = 0; i <= l; i++){
+		for(j = 0; j <= GSL_MIN_INT(i, m); j++){
+			
+			mid = 1.;
+			
+			for(k = 2*j-1; k > 0; k -= 2){
+				mid *= (double)k;
+			}
+			
+			if(i == j) d_Legendre[i][j] = -j * x * pow(-1., (double)j) * mid * pow(1.- x*x, (double)(j-2)/2.);
+			else if(i == j+1 ) d_Legendre[i][j] = (2*(double)j + 1.)*(P(i-1, j, x) + x*d_Legendre[i-1][j]);
+			else d_Legendre[i][j] = (1./(double)(i-j))*( (2.*(double)i -1.)*(P(i-1, j, x) + x*d_Legendre[i-1][j]) - (double)(i+j-1) * d_Legendre[i-2][j] ); 
+		}
+	}
+	
+	return d_Legendre[l][m];
+}
+
+double D(int l, int m, double x){
+	
+	int i, j, k;
+	double mid;
+	double D_Legendre[l][l];
+	
+	for(i = 0; i <= l; i++){
+		for(j = 0; j <= GSL_MIN_INT(i, m); j++){
+			
+			mid = 1.;
+			
+			for(k = 2*j-1; k > 0; k -= 2){
+				mid *= (double)k;
+			}
+			
+			if(i == j) D_Legendre[i][j] = j * pow(-1., (double)j) * mid * pow(1.- x*x, (double)(j-4)/2.) * ( ((double)j - 2.) * x*x - (1. - x*x) );
+			else if(i == j+1 ) D_Legendre[i][j] = (2*(double)j + 1.)*( 2.*d(i-1, j, x) + x*D_Legendre[i-1][j]);
+			else D_Legendre[i][j] = (1./(double)(i-j))*( (2.*(double)i -1.)*( 2.* d(i-1, j, x) + x*D_Legendre[i-1][j]) - (double)(i+j-1) * D_Legendre[i-2][j] ); 
+		}
+	}
+	
+	return D_Legendre[l][m];
+}
+
+double s0_Ylm(int l, int m, double theta){
+	
+	double c_theta;
+	
+	c_theta = cos(theta);
+	
+	if(c_theta > 1.) c_theta = 1.;
+	if(c_theta < -1.) c_theta = -1.;
+	
+	return A(l, m)*P(l, m, c_theta);
+	
+}
+
+double s1_Ylm(int l, int m, int s, double theta){
+	
+	double sigma;
+	double c_theta, s_theta;
+	double mid1, mid2;
+	
+	if(s > 0) sigma = 1.;
+	else sigma = -1.;
+	
+	c_theta = cos(theta);
+	s_theta = sin(theta);
+	
+	if(c_theta > 1.) c_theta = 1.;
+	if(c_theta < -1.) c_theta = -1.;
+	
+	if(s_theta > 1.) s_theta = 1.;
+	if(s_theta < -1.) s_theta = -1.;
+	
+	if(fabs(s_theta) < 1.0e-6) return 0.;
+	else{
+		mid1 = s_theta * d(l, m, c_theta);
+		mid2 = ((sigma*(double)m)/s_theta)*P(l, m, c_theta);
+		
+		return ((sigma*A(l, m))/(sqrt((double)(l*(l+1))))) * (mid1 + mid2);
+	}
+}
+
+double s2_Ylm(int l, int m, int s, double theta){
+	
+	double sigma;
+	double c_theta, s_theta;
+	double mid1, mid2, mid3;
+	
+	if(s > 0) sigma = 1.;
+	else sigma = -1.;
+	
+	c_theta = cos(theta);
+	s_theta = sin(theta);
+	
+	if(c_theta > 1.) c_theta = 1.;
+	if(c_theta < -1.) c_theta = -1.;
+	
+	if(s_theta > 1.) s_theta = 1.;
+	if(s_theta < -1.) s_theta = -1.;
+	
+	if(fabs(s_theta) < 1.0e-6) return 0.;
+	else{
+		mid1 = s_theta*s_theta * D(l, m, c_theta);
+		mid2 = sigma * 2. * m * d(l, m, c_theta);
+		mid3 = ( ( m*m + sigma * 2. * m * c_theta )/( s_theta*s_theta ) ) * P(l, m, c_theta);
+	
+		return ( A(l, m)/( sqrt((double)((l-1)*l*(l+1)*(l+2)))) ) * (mid1 + mid2 + mid3);
+	}
+}
+
+double SWSpherical_Harmonic(int l, int m, int s, double theta){
+	
+	double s_Y_lm;
+	
+	if(s == 0) s_Y_lm = s0_Ylm(l, m, theta);
+	else if(s == -1 || s == 1) s_Y_lm = s1_Ylm(l, m, s, theta);
+	else if(s == -2 || s == 2) s_Y_lm = s2_Ylm(l, m, s, theta);
+	else {
+		printf("WARNING@: The spin-weighted spheroidal harmonics for s > 2 have not been implemented in this code. \n");
+		s_Y_lm = 0.;
+	}
+	
+	return s_Y_lm;
+}
