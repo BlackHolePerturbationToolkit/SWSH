@@ -16,6 +16,7 @@ Supported by the ESA Summer of Code in Space 2017
 #include <time.h>
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_eigen.h>
+#include <gsl/gsl_sf_legendre.h>
 
 /**************************************/
 /*           Leaver's Method          */
@@ -98,46 +99,15 @@ double SWSH_Eigenvalue_Leaver(int nmax, int ninv, int m, int s, double a_omega, 
 double SWSH_Eigenvalue_Eigenvector_Spectral_custom(int l, int m, int s, double a_omega, double eigenvector[]);
 double SWSH_Eigenvalue_Eigenvector_Spectral_gsl(int l, int m, int s, double a_omega, double eigenvector[]);
 
-/* 	May decide to make all of these functions more flexible in the future. For now, am choosing brevity and legibility. if one wishes to compute eigenvalues for different problems,
-	simply redefine alpha_n, beta_n, gamma_n
+/**************************************/
+/*  Spin-Weighted Spherical Harmonics */
+/**************************************/
 
-typedef struct{
-	double alpha;
-	double beta;
-	double gamma;
-}	alpha_beta_gamma;
-
-void ABG_n(alpha_beta_gamma *abg, double A, int n, int m, int s, double omega);
-	
-double Newton_Raphson(double (*CF)(double a, int Nmax, int Ninv, int m, int s, double omega, 
-								double (*alpha)(int N, int M, int S, double Omega), 
-								double (*beta)(double A, int N, int M, int S, double Omega), 
-								double (*gamma)(int N, int M, int S, double Omega)),
-						double (*Alpha)(int N, int M, int S, double Omega), 
-						double (*Beta)(double A, int N, int M, int S, double Omega), 
-						double (*Gamma)(int N, int M, int S, double Omega),
-						int nmax, int ninv, int m, int s, double omega, double Ainit);
-
-double Secant_method(double (*CF)(double a, int Nmax, int Ninv, int m, int s, double omega, 
-								double (*alpha)(int N, int M, int S, double Omega), 
-								double (*beta)(double A, int N, int M, int S, double Omega), 
-								double (*gamma)(int N, int M, int S, double Omega)),
-						double (*Alpha)(int N, int M, int S, double Omega), 
-						double (*Beta)(double A, int N, int M, int S, double Omega), 
-						double (*Gamma)(int N, int M, int S, double Omega),
-						int nmax, int ninv, int m, int s, double omega, double A0, double A1);
-
-double Cont_Frac_Nth_inversion(double a, int Nmax, int Ninv, int m, int s, double omega, 
-								double (*alpha)(int N, int M, int S, double Omega), 
-								double (*beta)(double A, int N, int M, int S, double Omega), 
-								double (*gamma)(int N, int M, int S, double Omega));
-															
-double SWSH_Eigenvalue_Leaver(double (*Solver)(double (*CF)(double a, int Nmax, int Ninv, int m, int s, double omega, 
-											double (*alpha)(int N, int M, int S, double Omega), 
-											double (*beta)(double A, int N, int M, int S, double Omega), 
-											double (*gamma)(int N, int M, int S, double Omega)),
-									double (*Alpha)(int N, int M, int S, double Omega), 
-									double (*Beta)(double A, int N, int M, int S, double Omega), 
-									double (*Gamma)(int N, int M, int S, double Omega),
-									int nmax, int ninv, int m, int s, double omega, double A0, double A1),
-*/
+double A(int l, int m);
+double P(int l, int m, double x);
+double d(int l, int m, double x);
+double D(int l, int m, double x);
+double s0_Ylm(int l, int m, double theta);
+double s1_Ylm(int l, int m, int s, double theta);
+double s2_Ylm(int l, int m, int s, double theta);
+double SWSpherical_Harmonic(int l, int m, int s, double theta);
