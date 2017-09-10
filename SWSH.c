@@ -597,9 +597,9 @@ double SWSH_Eigenvalue_Eigenvector_Spectral_gsl(int l, int m, int s, double a_om
 	
 }
 
-/**************************************/
-/* Spin-Weighted Spherical Harmonics  */
-/**************************************/
+/*****************************************************/
+/* Spin-Weighted Spherical Harmonics Legendre method */
+/*****************************************************/
 
 double A(int l, int m){
 	
@@ -760,7 +760,7 @@ double s2_Ylm(int l, int m, int s, double theta){
 	}
 }
 
-double SWSpherical_Harmonic(int l, int m, int s, double theta){
+double SWSpherical_Harmonic_Hughes(int l, int m, int s, double theta){
 	
 	double s_Y_lm;
 	
@@ -773,4 +773,42 @@ double SWSpherical_Harmonic(int l, int m, int s, double theta){
 	}
 	
 	return s_Y_lm;
+}
+
+/****************************************************/
+/* Spin-Weighted Spherical Harmonics Wigner method  */
+/****************************************************/
+	
+double SWSpherical_Harmonic_Wigner(int l, int m, int s, double theta){
+	double mid;
+	int min, max;
+	int i;
+	double sum;
+	double cs, sn;
+	
+	if(m+s > 0) min = m+s;
+	else min = 0;
+	
+	if(l+s < l+m) max = l+s;
+	else max = l+m;
+	
+	mid = sqrt(gsl_sf_fact(l+m)*gsl_sf_fact(l-m)*gsl_sf_fact(l+s)*gsl_sf_fact(l-s));
+	cs = cos(theta/2.);
+	sn = sin(theta/2.);
+	
+	if(cs > 1.) cs = 1.;
+	else if(cs < -1.) cs = -1.;
+	if(sn > 1.) sn = 1.;
+	else if(sn < -1.) sn = -1.;
+	
+	sum = 0.;
+	for(i = min; i <= max; i++){
+		sum += (pow(-1., i-m-s)*pow(cs, 2*l + s + m - 2*i)*pow(sn, 2*i  - m - s))/
+				(gsl_sf_fact(l+s-i)*gsl_sf_fact(i)*gsl_sf_fact(i-m-s)*gsl_sf_fact(l+m-i));
+		//sum += (pow(-1., l-i-s)*pow(cs, 2*i -m + s)*pow(sn, 2*l + m - s - 2*i))/
+				//(gsl_sf_fact(l-s-i)*gsl_sf_fact(i)*gsl_sf_fact(i-m+s)*gsl_sf_fact(l+m-i));
+	}
+	
+	return sqrt((2.*(double)l + 1.)/(4.*M_PI))*mid*sum;
+	
 }
