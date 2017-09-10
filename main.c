@@ -21,50 +21,48 @@ int main(int argc, char *argv[]){
 	double a_omega;
 	double theta, phi;
 	FILE *Spherical_test;
-	const char* spherical_file = "Spherical_Harmonic.txt";
+	const char* spherical_file = "Spherical_Harmonic_R.txt";
 	
 	Spherical_test = fopen(spherical_file, "w");
 	
-	l = 20;
-	m = 4;
+	l = 5;
+	m = 0;
 	s = 0;
 	a_omega = 5.5;
 	
 	double Re_Y, Im_Y, c_phi, s_phi;
-	double Re_Y_2;
-	
-	//double Y2, diff, p;
-	
-	//diff = d(l, m, cos(0.5));
-	//Y2 = s2_Ylm(l, m, s, 0.5);
-	
-	//printf("%lf, %lf \n", diff, Y2);
+	double Re_Y_2, Im_Y_2;
 	
 	theta = 0.;
 	do{
 		phi = 0.;
-		c_phi = cos(phi);
-		s_phi = sin(phi);
-		
-		if(c_phi > 1.) c_phi = 1.;
-		if(c_phi < -1.) c_phi = -1.;
-		if(s_phi > 1.) s_phi = 1.;
-		if(s_phi < -1.) s_phi = -1.;
 		
 		do{
-			//Re_Y = c_phi * SWSpherical_Harmonic(l, m, s, theta);
-			//Im_Y = s_phi * SWSpherical_Harmonic(l, m, s, theta);
+			c_phi = cos(phi);
+			s_phi = sin(phi);
+		
+			if(c_phi > 1.) c_phi = 1.;
+			if(c_phi < -1.) c_phi = -1.;
+			if(s_phi > 1.) s_phi = 1.;
+			if(s_phi < -1.) s_phi = -1.;
+			
+			Re_Y = c_phi * SWSpherical_Harmonic_Wigner(l, m, s, theta);
+			Im_Y = s_phi * SWSpherical_Harmonic_Wigner(l, m, s, theta);
 			Re_Y_2 = c_phi * gsl_sf_legendre_sphPlm(l, m, cos(theta));
+			Im_Y_2 = s_phi * gsl_sf_legendre_sphPlm(l, m, cos(theta));
 			
+			if(fabs(Re_Y - Re_Y_2) != 0.) printf("%.20lf \n", fabs(Re_Y - Re_Y_2));
 			//printf("%lf, %lf, %.20lf \n", Re_Y, Re_Y_2, fabs(Re_Y - Re_Y_2));
+			//printf("%lf, %lf, %.20lf \n", Im_Y, Im_Y_2, fabs(Im_Y - Im_Y_2));
 			
-			//fprintf(Spherical_test, "%.15lf %.15lf %.15lf %.15lf \n", theta, phi, Re_Y, Im_Y);
+			fprintf(Spherical_test, "%.15lf \n", Re_Y);
 			
 			phi += M_PI/100.;
 		} while(phi < M_PI);
 		
 		theta += (2.*M_PI)/100.;
 	} while(theta < 2.*M_PI);
+	
 	
 	fclose(Spherical_test);
 	free(Spherical_test);
