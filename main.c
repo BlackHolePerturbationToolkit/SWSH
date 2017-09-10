@@ -45,9 +45,14 @@ int main(int argc, char *argv[]){
 	do{
 		phi = 0.;
 		
+		c_theta = cos(theta);
+		
+		if(c_theta > 1.) c_theta = 1.;
+			if(c_theta < -1.) c_theta = -1.;
+		
 		do{
-			c_phi = cos(phi);
-			s_phi = sin(phi);
+			c_phi = cos(((double)m)*phi);
+			s_phi = sin(((double)m)*phi);
 		
 			if(c_phi > 1.) c_phi = 1.;
 			if(c_phi < -1.) c_phi = -1.;
@@ -56,6 +61,7 @@ int main(int argc, char *argv[]){
 			
 			Re_Y = c_phi * SWSpherical_Harmonic_Wigner(l, m, s, theta);
 			Im_Y = s_phi * SWSpherical_Harmonic_Wigner(l, m, s, theta);
+
 			if(s == 0){
 				Re_Y_2 = c_phi * gsl_sf_legendre_sphPlm(l, m, cos(theta)); 
 				Im_Y_2 = s_phi * gsl_sf_legendre_sphPlm(l, m, cos(theta));
@@ -66,11 +72,13 @@ int main(int argc, char *argv[]){
 			fprintf(Spherical_test, "%.15lf %.15lf %.15lf %.15lf \n", theta, phi, Re_Y, Im_Y);
 			fprintf(Spherical_test_theta, "%.15lf \n", theta);
 			fprintf(Spherical_test_phi, "%.15lf \n", phi);
+
+
 			fprintf(Spherical_test_r, "%.15lf \n", Re_Y);
 			fprintf(Spherical_test_i, "%.15lf \n", Im_Y);
 			
 			phi += M_PI/100.;
-		} while(phi < M_PI);
+		} while(phi <= M_PI);
 		
 		theta += (2.*M_PI)/100.;
 	} while(theta < 2.*M_PI);
