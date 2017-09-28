@@ -3,6 +3,8 @@
 13/07/2017
 Written by  Conor O'Toole
 			University College Dublin
+Supervisor:	Barry Wardell
+			University College Dublin
 
 Supported by the ESA Summer of Code in Space 2017
 
@@ -811,4 +813,44 @@ double SWSpherical_Harmonic_Wigner(int l, int m, int s, double theta){
 	
 	return sqrt((2.*(double)l + 1.)/(4.*M_PI))*mid*sum;
 	
+}
+
+/****************************************************/
+/*        Spin-Weighted Spheroidal Harmonics        */
+/****************************************************/
+
+double SWSpheroidal_Harmonic(int l, int m, int s, double a_omega, double theta){
+	
+	int lmin, nmin, nmax;
+	int i;
+	double Y;
+	double S = 0.;
+	
+	if(abs(s) >= abs(m)) lmin = abs(s);
+	else lmin = abs(m);
+	nmax = ceil(fabs(1.5 * a_omega - (a_omega*a_omega)/250.)) + 5;
+	if(nmax <= l-lmin) nmin = nmax;
+	else nmin = l - lmin;
+	
+	int dim = nmin + nmax + 2;
+	
+	double eigenvalue;
+	double eigenvector[dim];
+	int index;
+	double sign;
+	
+	if( l - lmin <= 0.5 * (nmax + nmin)) index  = l - lmin;
+	else index = (int)(0.5*(nmax+nmin));
+	
+	if( eigenvector[index] >= 0. ) sign = 1.;
+	else sign = -1.;
+	
+	eigenvalue = SWSH_Eigenvalue_Eigenvector_Spectral_gsl(l, m, s, a_omega, eigenvector);
+	
+	for(i = -nmin; i < nmax+1; i++){
+		Y = SWSpherical_Harmonic_Wigner(l + i, m, s, theta);
+		S += (sign * eigenvector[i + nmin])*Y;
+	}
+	
+	return S;
 }
