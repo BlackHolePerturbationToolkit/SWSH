@@ -1,0 +1,280 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.4' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     11360,        272]
+NotebookOptionsPosition[     10781,        247]
+NotebookOutlinePosition[     11126,        262]
+CellTagsIndexPosition[     11083,        259]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ClearAll", "[", "\"\<Global`*\>\"", "]"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "SetDirectory", "[", "\"\<C:/Users/Conor/Desktop/SOCIS/Code/\>\"", "]"}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.715064358930978*^9, 3.715064375468111*^9}, {
+  3.7150644561978054`*^9, 3.7150645395572166`*^9}, {3.7150646719438734`*^9, 
+  3.7150646850553217`*^9}, {3.715084549320633*^9, 3.7150845779884872`*^9}, {
+  3.7150847330747924`*^9, 3.715084742791213*^9}, {3.7152772654412107`*^9, 
+  3.7152772879195733`*^9}, {3.7153121211066694`*^9, 3.7153121225995455`*^9}, {
+  3.715312924174268*^9, 3.715312932263252*^9}, {3.7153148063767147`*^9, 
+  3.7153148436498494`*^9}, {3.7153153316042166`*^9, 3.715315347089569*^9}, {
+  3.71531648442828*^9, 3.71531651415967*^9}, {3.715317734422882*^9, 
+  3.715317741910182*^9}, {3.7155773212315598`*^9, 3.715577352973277*^9}, {
+  3.715577412706113*^9, 3.7155774183773274`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Eigenvalues Comparison", "Section",
+ CellChangeTimes->{{3.715577493058579*^9, 3.71557749664452*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"EigenvalueCTest", " ", "=", " ", 
+    RowBox[{"Import", "[", 
+     RowBox[{
+     "\"\<C_Test_Results/Spheroidal_Eigenvalues.txt\>\"", ",", " ", 
+      "\"\<Table\>\""}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"EigenvalueMathematicaTest", " ", "=", " ", 
+    RowBox[{"Import", "[", 
+     RowBox[{
+     "\"\<Mathematica_Test_Results/Spheroidal_Eigenvalues.txt\>\"", ",", " ", 
+      "\"\<Table\>\""}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"EigenvalueDiff", " ", "=", " ", 
+    RowBox[{"EigenvalueMathematicaTest", " ", "-", " ", "EigenvalueCTest"}]}],
+    ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"If", "[", 
+   RowBox[{
+    RowBox[{"AnyTrue", "[", 
+     RowBox[{"EigenvalueDiff", ",", " ", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Abs", "[", "#", "]"}], " ", ">", " ", 
+        RowBox[{"10", "^", 
+         RowBox[{"-", "10."}]}]}], " ", "&"}]}], "]"}], ",", " ", 
+    RowBox[{"Print", "[", 
+     RowBox[{"\"\<Warning: Eigenvalue Harmonic Discrepancy at l = \>\"", "<>", 
+      RowBox[{"ToString", "[", "l", "]"}], "<>", "\"\<, m = \>\"", "<>", 
+      RowBox[{"ToString", "[", "m", "]"}], "<>", "\"\<, s = \>\"", "<>", 
+      RowBox[{"ToString", "[", "s", "]"}], "<>", "\"\<.\>\""}], "]"}]}], 
+   "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.715577679720468*^9, 3.715577812464918*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Spherical Harmonics Comparison", "Section",
+ CellChangeTimes->{{3.7155775069462285`*^9, 3.715577513054139*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"s", " ", "=", " ", 
+   RowBox[{"-", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"While", "[", " ", 
+   RowBox[{
+    RowBox[{"s", " ", "\[LessEqual]", " ", "2"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"l", " ", "=", " ", 
+      RowBox[{"Abs", "[", "s", "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"While", "[", 
+      RowBox[{
+       RowBox[{"l", " ", "\[LessEqual]", " ", "20"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"m", " ", "=", " ", 
+         RowBox[{"-", "l"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"While", "[", 
+         RowBox[{
+          RowBox[{"m", "\[LessEqual]", " ", "l"}], ",", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"SphericalCTest", " ", "=", " ", 
+            RowBox[{"Import", "[", 
+             RowBox[{
+              RowBox[{"\"\<C_Test_Results/Spherical_Harmonic_\>\"", "<>", 
+               RowBox[{"ToString", "[", "s", "]"}], "<>", "\"\<_\>\"", "<>", 
+               RowBox[{"ToString", "[", "l", "]"}], "<>", "\"\<_\>\"", "<>", 
+               RowBox[{"ToString", "[", "m", "]"}], "<>", "\"\<.txt\>\""}], 
+              ",", " ", "\"\<Table\>\""}], "]"}]}], ";", 
+           "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"SphericalMathematicaTest", " ", "=", " ", 
+            RowBox[{"Import", "[", 
+             RowBox[{
+              RowBox[{
+              "\"\<Mathematica_Test_Results/Spherical_Harmonic_\>\"", "<>", 
+               RowBox[{"ToString", "[", "s", "]"}], "<>", "\"\<_\>\"", "<>", 
+               RowBox[{"ToString", "[", "l", "]"}], "<>", "\"\<_\>\"", "<>", 
+               RowBox[{"ToString", "[", "m", "]"}], "<>", "\"\<.txt\>\""}], 
+              ",", " ", "\"\<Table\>\""}], "]"}]}], ";", 
+           "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"SphericalDiff", " ", "=", " ", 
+            RowBox[{
+            "SphericalMathematicaTest", " ", "-", " ", "SphericalCTest"}]}], 
+           ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"AnyTrue", "[", 
+              RowBox[{"SphericalDiff", ",", " ", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"Abs", "[", "#", "]"}], " ", ">", " ", 
+                 RowBox[{"10", "^", 
+                  RowBox[{"-", "10."}]}]}], " ", "&"}]}], "]"}], ",", " ", 
+             RowBox[{"Print", "[", 
+              RowBox[{
+              "\"\<Warning: Spherical Harmonic Discrepancy at l = \>\"", "<>", 
+               RowBox[{"ToString", "[", "l", "]"}], "<>", "\"\<, m = \>\"", "<>", 
+               RowBox[{"ToString", "[", "m", "]"}], "<>", "\"\<, s = \>\"", "<>", 
+               RowBox[{"ToString", "[", "s", "]"}], "<>", "\"\<.\>\""}], 
+              "]"}]}], "]"}], ";", "\[IndentingNewLine]", 
+           "\[IndentingNewLine]", 
+           RowBox[{"m", " ", "=", " ", 
+            RowBox[{"m", "+", "1"}]}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"l", " ", "=", " ", 
+         RowBox[{"l", "+", "1"}]}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"s", " ", "=", " ", 
+      RowBox[{"s", "+", "1"}]}]}]}], "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.7155775516348686`*^9, 3.715577660189339*^9}, 
+   3.715577814731703*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Spheroidal Harmonics Comparison", "Section",
+ CellChangeTimes->{{3.71557736361446*^9, 3.715577369676955*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"s", " ", "=", " ", 
+   RowBox[{"-", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"While", "[", " ", 
+   RowBox[{
+    RowBox[{"s", " ", "\[LessEqual]", " ", "2"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"l", " ", "=", " ", 
+      RowBox[{"Abs", "[", "s", "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"While", "[", 
+      RowBox[{
+       RowBox[{"l", " ", "\[LessEqual]", " ", "20"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"m", " ", "=", " ", 
+         RowBox[{"-", "l"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"While", "[", 
+         RowBox[{
+          RowBox[{"m", "\[LessEqual]", " ", "l"}], ",", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"SpheroidalCTest", " ", "=", " ", 
+            RowBox[{"Import", "[", 
+             RowBox[{
+              RowBox[{"\"\<C_Test_Results/Spheroidal_\>\"", "<>", 
+               RowBox[{"ToString", "[", "s", "]"}], "<>", "\"\<_\>\"", "<>", 
+               RowBox[{"ToString", "[", "l", "]"}], "<>", "\"\<_\>\"", "<>", 
+               RowBox[{"ToString", "[", "m", "]"}], "<>", "\"\<.txt\>\""}], 
+              ",", " ", "\"\<Table\>\""}], "]"}]}], ";", 
+           "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"SpheroidalMathematicaTest", " ", "=", " ", 
+            RowBox[{"Import", "[", 
+             RowBox[{
+              RowBox[{
+              "\"\<Mathematica_Test_Results/Spheroidal_Harmonic_\>\"", "<>", 
+               RowBox[{"ToString", "[", "s", "]"}], "<>", "\"\<_\>\"", "<>", 
+               RowBox[{"ToString", "[", "l", "]"}], "<>", "\"\<_\>\"", "<>", 
+               RowBox[{"ToString", "[", "m", "]"}], "<>", "\"\<.txt\>\""}], 
+              ",", " ", "\"\<Table\>\""}], "]"}]}], ";", 
+           "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"SpheroidalDiff", " ", "=", " ", 
+            RowBox[{
+            "SpheroidalMathematicaTest", " ", "-", " ", "SpheroidalCTest"}]}],
+            ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"AnyTrue", "[", 
+              RowBox[{"SpheroidalDiff", ",", " ", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"Abs", "[", "#", "]"}], " ", ">", " ", 
+                 RowBox[{"10", "^", 
+                  RowBox[{"-", "10."}]}]}], " ", "&"}]}], "]"}], ",", " ", 
+             RowBox[{"Print", "[", 
+              RowBox[{
+              "\"\<Warning: Spheroidal Harmonic Discrepancy at l = \>\"", "<>", 
+               RowBox[{"ToString", "[", "l", "]"}], "<>", "\"\<, m = \>\"", "<>", 
+               RowBox[{"ToString", "[", "m", "]"}], "<>", "\"\<, s = \>\"", "<>", 
+               RowBox[{"ToString", "[", "s", "]"}], "<>", "\"\<.\>\""}], 
+              "]"}]}], "]"}], ";", "\[IndentingNewLine]", 
+           RowBox[{"m", " ", "=", " ", 
+            RowBox[{"m", "+", "1"}]}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"l", " ", "=", " ", 
+         RowBox[{"l", "+", "1"}]}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"s", " ", "=", " ", 
+      RowBox[{"s", "+", "1"}]}]}]}], "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.715064358930978*^9, 3.715064375468111*^9}, {
+   3.7150644561978054`*^9, 3.7150645395572166`*^9}, {3.7150646719438734`*^9, 
+   3.7150646850553217`*^9}, {3.715084549320633*^9, 3.7150845779884872`*^9}, {
+   3.7150847330747924`*^9, 3.715084742791213*^9}, {3.7152772654412107`*^9, 
+   3.7152772879195733`*^9}, {3.7153121211066694`*^9, 
+   3.7153121225995455`*^9}, {3.715312924174268*^9, 3.715312932263252*^9}, {
+   3.7153148063767147`*^9, 3.7153148436498494`*^9}, {3.7153153316042166`*^9, 
+   3.715315347089569*^9}, {3.71531648442828*^9, 3.71531651415967*^9}, {
+   3.715317734422882*^9, 3.715317741910182*^9}, {3.7155773212315598`*^9, 
+   3.715577483893775*^9}, {3.715577664860531*^9, 3.7155776720564795`*^9}, 
+   3.715577817204514*^9}]
+}, Open  ]]
+},
+WindowSize->{1350, 676},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"10.4 for Microsoft Windows (64-bit) (February 25, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 967, 17, 72, "Input"],
+Cell[CellGroupData[{
+Cell[1550, 41, 106, 1, 70, "Section"],
+Cell[1659, 44, 1501, 38, 172, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3197, 87, 117, 1, 70, "Section"],
+Cell[3317, 90, 3334, 69, 392, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6688, 164, 115, 1, 70, "Section"],
+Cell[6806, 167, 3959, 77, 372, "Input"]
+}, Open  ]]
+}
+]
+*)
+
