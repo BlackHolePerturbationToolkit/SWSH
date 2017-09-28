@@ -3,7 +3,9 @@
 13/07/2017
 Written by  Conor O'Toole
 			University College Dublin
-
+Supervisor:	Barry Wardell
+			University College Dublin
+			
 Supported by the ESA Summer of Code in Space 2017
 
 ********************************************/
@@ -117,3 +119,9 @@ double SWSpherical_Harmonic_Hughes(int l, int m, int s, double theta);
 /****************************************************/
 
 double SWSpherical_Harmonic_Wigner(int l, int m, int s, double theta);
+
+/****************************************************/
+/*        Spin-Weighted Spheroidal Harmonics        */
+/****************************************************/
+
+double SWSpheroidal_Harmonic(int l, int m, int s, double a_omega, double theta);
